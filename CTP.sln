@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTP", "CTP\CTP.csproj", "{EE92980A-D2AB-4CCA-AC64-95B5F3653A4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypter", "Crypter\Crypter.csproj", "{3926DA1F-6502-40D7-89AD-4BBD1A8779D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FieldMath", "FieldMath\FieldMath.csproj", "{5DCF4AC6-1022-456E-B029-BE6FBBF69536}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "Example\Example.csproj", "{3AF8167E-3DD1-4319-AC15-2F968B786417}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EE92980A-D2AB-4CCA-AC64-95B5F3653A4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE92980A-D2AB-4CCA-AC64-95B5F3653A4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE92980A-D2AB-4CCA-AC64-95B5F3653A4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE92980A-D2AB-4CCA-AC64-95B5F3653A4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3926DA1F-6502-40D7-89AD-4BBD1A8779D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3926DA1F-6502-40D7-89AD-4BBD1A8779D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3926DA1F-6502-40D7-89AD-4BBD1A8779D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3926DA1F-6502-40D7-89AD-4BBD1A8779D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DCF4AC6-1022-456E-B029-BE6FBBF69536}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DCF4AC6-1022-456E-B029-BE6FBBF69536}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DCF4AC6-1022-456E-B029-BE6FBBF69536}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DCF4AC6-1022-456E-B029-BE6FBBF69536}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AF8167E-3DD1-4319-AC15-2F968B786417}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AF8167E-3DD1-4319-AC15-2F968B786417}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AF8167E-3DD1-4319-AC15-2F968B786417}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AF8167E-3DD1-4319-AC15-2F968B786417}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8D0BC3F7-84B2-436C-8E47-A74CA44DC8BC}
+	EndGlobalSection
+EndGlobal
