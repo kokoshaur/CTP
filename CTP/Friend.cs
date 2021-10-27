@@ -17,10 +17,16 @@ namespace CTP
         TcpClient socket;
         protected internal NetworkStream Stream { get; private set; }
 
+        Queue<Tuple<byte, byte[]>> sendQueue = new Queue<Tuple<byte, byte[]>>();
+        bool isQueueTransmit = false;
+        bool isFileTransmit = false;
+        Task startSendQueue;
+
         public Friend(TcpClient socket)
         {
             Id = Guid.NewGuid().ToString();
             this.socket = socket;
+            startSendQueue = new Task(newStartSendQueue);
         }
 
         public void connectTo(List<Friend> friends, Type type)
@@ -52,21 +58,20 @@ namespace CTP
 
         public void send(string message)
         {
-            Stream.WriteByte((byte)Command.NewMessage);
-            Stream.Write(crypterTo.encryptBlock(Settings.Crypto.encoding.GetBytes(message)));
-            Stream.Flush();
+            addToQueue(Command.NewMessage, Settings.Crypto.encoding.GetBytes(message));
         }
 
         public void send(byte[] message)
         {
-            Stream.WriteByte((byte)Command.NewFrame);
-            Stream.Write(crypterTo.encryptBlock(message));
-            Stream.Flush();
-            Stream.ReadByte();
+            addToQueue(Command.NewFrame, message);
         }
 
         public void send(FileStream file)
         {
+            isFileTransmit = true;
+            if (startSendQueue.IsCompleted)
+                startSendQueue.Wait();
+
             int coutRepeat = (int)Math.Ceiling((double)file.Length / (double)crypterTo.sizeOfReadCluster);
             Stream.Write(Commander.generateCommandNewFile(Path.GetFileName(file.Name), coutRepeat));
             if (Stream.ReadByte() != (byte)Errors.succes)
@@ -85,13 +90,24 @@ namespace CTP
 
             reader.Close();
             file.Close();
+
+            isFileTransmit = false;
+            isQueueTransmit = false;
+            restoreSend();
         }
 
         public void refreshCrypto(byte type)
         {
             ICrypto buf = CryptersFactory.newCrypter((CryptersFactory.CryptoType)type, Settings.Crypto.sizeBlock);
-            Stream.Write(Commander.generateCommandNewCrypt(type, crypterTo.encryptBlock(buf.getOpenKey())));
-            Stream.Flush();
+
+            byte[] key = buf.getOpenKey();
+            byte[] message = new byte[1 + key.Length];
+            message[0] = type;
+            for (int i = 2; i < message.Length; i++)
+                message[i] = key[i - 2];
+
+            addToQueue(Command.NewCrypt, message);
+
             crypterFrom = buf;
         }
 
@@ -107,11 +123,45 @@ namespace CTP
                 return false;
         }
 
+        private void addToQueue(Command command, in byte[] message)
+        {
+            if (sendQueue.Count < Settings.Connect.maxQueueSize)
+            {
+                sendQueue.Enqueue(new Tuple<byte, byte[]>((byte)command, crypterTo.encryptBlock(message)));
+                restoreSend();
+            }
+        }
+
+        private void restoreSend()
+        {
+            if (!isQueueTransmit && !isFileTransmit)
+            {
+                startSendQueue = new Task(newStartSendQueue);
+                startSendQueue.Start();
+            }
+        }
+
+        private void newStartSendQueue()
+        {
+            isQueueTransmit = true;
+            while(sendQueue.Count != 0 && !isFileTransmit)
+            {
+                Tuple<byte, byte[]> message = sendQueue.Peek();
+                Stream.WriteByte(message.Item1);
+                Stream.Write(message.Item2);
+                if (Stream.ReadByte() == (byte)Errors.succes)
+                    sendQueue.Dequeue();
+            }
+            isQueueTransmit = false;
+            return;
+        }
+
         private string parseMessage(Command command, ref byte[] data)
         {
             switch (command)
             {
                 case Command.NewMessage:
+                    Stream.WriteByte((byte)Errors.succes);
                     return name + ":" + Settings.Crypto.encoding.GetString(crypterFrom.decryptBlock(data));
 
                 case Command.NewFile:
@@ -128,12 +178,14 @@ namespace CTP
                     return Language.Connect.accept + ": " + (data.Length - 1) + Language.Connect.bytes;
 
                 case Command.NewCrypt:
+                    Stream.WriteByte((byte)Errors.succes);
+                    data = crypterFrom.decryptBlock(data);
                     int type = data[0];
                     byte[] buf = new byte[data.Length - 1];
                     for (int i = 0; i < buf.Length; i++)
                         buf[i] = data[i + 1];
-                    data = buf;
-                    crypterTo = CryptersFactory.newCrypter((CryptersFactory.CryptoType)type, crypterFrom.decryptBlock(buf));
+
+                    crypterTo = CryptersFactory.newCrypter((CryptersFactory.CryptoType)type, buf);
 
                     return Language.Connect.updateCrypter + (CryptersFactory.CryptoType)type;
 
@@ -145,6 +197,10 @@ namespace CTP
 
         private void saveFile(string name, int coutRepeat)
         {
+            isFileTransmit = true;
+            if (startSendQueue.IsCompleted)
+                startSendQueue.Wait();
+
             FileStream file = new FileStream(Settings.Main.pathToSave + name, FileMode.Create, FileAccess.Write, FileShare.Write);
             BinaryWriter writer = new BinaryWriter(file);
 
@@ -173,6 +229,10 @@ namespace CTP
             writer.Flush();
             writer.Close();
             file.Close();
+
+            isFileTransmit = false;
+            isQueueTransmit = false;
+            restoreSend();
         }
 
         public void disconnect()

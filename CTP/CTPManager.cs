@@ -15,7 +15,7 @@ namespace CTP   //Cryptographic transmission protocol
         GAMAL = Crypter.CryptersFactory.CryptoType.GAMAL,
         XOR = Crypter.CryptersFactory.CryptoType.XOR
     }
-    public class Manager
+    public class CTPManager
     {
         public bool allowNewConnection { get; private set; } = true;
         public bool allowAcceptMessage { get; private set; } = true;
@@ -30,7 +30,7 @@ namespace CTP   //Cryptographic transmission protocol
         Task listenNewFriends;
         Task listenNewMessage;
 
-        public Manager(Action<string> showMessage, Action<string, byte[]> showFrame = null)
+        public CTPManager(Action<string> showMessage, Action<string, byte[]> showFrame = null)
         {
             this.showMessage = showMessage;
             this.showFrame = showFrame;
@@ -200,7 +200,7 @@ namespace CTP   //Cryptographic transmission protocol
                 foreach (Friend friend in friends.ToArray())
                     if (friend.getMessage(ref command, ref message, ref data))
                         processResult(command, message, data);
-                Thread.Sleep(100);
+                Thread.Sleep(Settings.Connect.checkMessageDelay);
             }
         }
 

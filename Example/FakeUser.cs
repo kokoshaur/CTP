@@ -9,7 +9,7 @@ namespace Example
     {
         string IP;
         public int myPort { private set; get; }
-        Manager me;
+        CTPManager me;
         string name;
         int coutFrame = 0;
         public FakeUser(string ip, int portIn, string name)
@@ -17,7 +17,7 @@ namespace Example
             IP = ip;
             myPort = portIn;
             this.name = name;
-            me = new Manager(show, showFrame);
+            me = new CTPManager(show, showFrame);
             start();
         }
 
@@ -28,7 +28,10 @@ namespace Example
 
         public void showFrame(string message, byte[] data)
         {
-            Console.WriteLine(name + " " + "Новый фрейм " + data.Length + " (" + coutFrame++ + ")");
+            if (data[0] == 123)
+                Console.WriteLine(name + " " + "Принят новый фрейм " + data.Length + " (" + coutFrame++ + ")");
+            else
+                Console.WriteLine("Потеря пакета");
         }
 
         public void connect(int portOut)
@@ -47,10 +50,7 @@ namespace Example
                 message[i] = 123;
 
             for (int i = 0; i < coutRepeat; i++)
-            {
                 me.sendToAll(message);
-                Thread.Sleep(150);
-            }
         }
 
         public void sendFile(string path)

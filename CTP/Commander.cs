@@ -30,9 +30,8 @@ namespace CTP
 
         public static byte[] generateCommandNewCrypt(byte typeOfCrypt, in byte[] key)
         {
-            byte[] ansver = new byte[2 + key.Length];
-            ansver[0] = (byte)Command.NewCrypt;
-            ansver[1] = typeOfCrypt;
+            byte[] ansver = new byte[1 + key.Length];
+            ansver[0] = typeOfCrypt;
             for (int i = 2; i < ansver.Length; i++)
                 ansver[i] = key[i - 2];
 

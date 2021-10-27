@@ -13,6 +13,8 @@ namespace CTP
         {
             public static string Name = "mda";
             public static int connectTimeout = 100;
+            public static int maxQueueSize = 100;
+            public static int checkMessageDelay = 10;
         }
 
         public static class Main
