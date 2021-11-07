@@ -200,7 +200,7 @@ namespace CTP   //Cryptographic transmission protocol
                 foreach (Friend friend in friends.ToArray())
                     if (friend.getMessage(ref command, ref message, ref data))
                         processResult(command, message, data);
-                Thread.Sleep(Settings.Connect.checkMessageDelay);
+                Commander.sleepForOptimization();
             }
         }
 

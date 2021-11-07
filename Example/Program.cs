@@ -5,7 +5,7 @@ namespace Example
 {
     class Program
     {
-        static string IP = "5.16.55.129";    //В примере оба ip - это внешний ip данной машины
+        static string IP = "Ur IP";    //В примере оба ip - это внешний ip данной машины
         static void Main(string[] args)
         {
             Console.WriteLine("Проверка открытия портов");
@@ -29,17 +29,19 @@ namespace Example
             Console.ReadLine();
             user1.send("Hello, world!");
             Console.ReadLine();
+            user2.send("Hello, world!");
+            Console.ReadLine();
 
             Console.WriteLine("Проверка отправки файла");
             Settings.Main.pathToSave = "C:\\";
-            user1.sendFile("D:\\Subjs\\1.png");
+            user1.sendFile("C:\\Users\\admin\\Desktop\\2.png");
             Console.ReadLine();
 
             Console.WriteLine("Проверка отправки файла с тяжеловесными шифрованиями");
             user1.refreshCrypto("user2", CTP.Type.RSA);
             Console.ReadLine();
             Settings.Main.pathToSave = "C:\\";
-            user1.sendFile("D:\\Subjs\\2.png");
+            user1.sendFile("D:\\Subjs\\1.png");
             Console.ReadLine();
 
             Console.WriteLine("Проверка отправки непрерывного потока данных (видео)");
@@ -47,7 +49,7 @@ namespace Example
             Console.ReadLine();
             user1.refreshCrypto("user2", CTP.Type.XOR);
             Console.ReadLine();
-            user1.startSendStrim(100);
+            user1.startSendStrim(20);
             Console.WriteLine("Отправлено 100 пакетов");
             Console.ReadLine();
 

@@ -42,5 +42,10 @@ namespace CTP
         {
             System.Threading.Thread.Sleep(15);
         }
+
+        public static void sleepForOptimization()
+        {
+            System.Threading.Thread.Sleep(Settings.Connect.checkMessageDelay);
+        }
     }
 }

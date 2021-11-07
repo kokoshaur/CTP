@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Threading;
 using CTP;
 
 namespace Example
@@ -28,10 +27,10 @@ namespace Example
 
         public void showFrame(string message, byte[] data)
         {
-            if (data[0] == 123)
+            if (data[0] == 123 && data[data.Length - 1] == 123 && data.Length == 8000)
                 Console.WriteLine(name + " " + "Принят новый фрейм " + data.Length + " (" + coutFrame++ + ")");
             else
-                Console.WriteLine("Потеря пакета");
+                Console.WriteLine("Потеря пакета" + coutFrame++);
         }
 
         public void connect(int portOut)

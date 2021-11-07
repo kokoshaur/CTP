@@ -14,6 +14,7 @@
             public static string accept = "Получено";
             public static string bytes = "байт";
             public static string updateCrypter = "Режим шифрования успешно сменён на ";
+            public static string lostPacket = "Потеря пакета";
         }
 
         public static class Error
